@@ -20,6 +20,7 @@ model User {
   authEvents    AuthEvent[]
   students      Student[]
   groups        Group[]
+  subjects      Subject[]
 
   @@map("users")
 }
@@ -111,4 +112,20 @@ model Career {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("careers")
+}
+
+model Subject {
+  id          String   @id @default(uuid())
+  teacherId   String   @map("teacher_id")
+  name        String
+  description String?
+  color       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  teacher User @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([teacherId, name])
+  @@index([teacherId])
+  @@map("subjects")
 }

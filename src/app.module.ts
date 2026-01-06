@@ -5,9 +5,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma';
 import { AuthModule, JwtAuthGuard } from './auth';
+import { CareersModule } from './careers';
+import { SubjectsModule } from './subjects';
 import { StudentsModule } from './students';
 import { GroupsModule } from './groups';
-import { CareersModule } from './careers';
 import { jwtConfig } from './config';
 
 @Module({
@@ -20,6 +21,7 @@ import { jwtConfig } from './config';
     PrismaModule,
     AuthModule,
     CareersModule,
+    SubjectsModule,
     StudentsModule,
     GroupsModule,
   ],
