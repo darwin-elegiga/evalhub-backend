@@ -6,5 +6,6 @@ export class UpdateStudentCommand {
     public readonly email?: string,
     public readonly year?: string,
     public readonly career?: string,
+    public readonly groupIds?: string[],
   ) {}
 }

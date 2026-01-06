@@ -1,5 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsArray,
+  IsEmail,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
 
 export class UpdateStudentDto {
   @ApiPropertyOptional({
@@ -40,4 +47,14 @@ export class UpdateStudentDto {
   @IsOptional()
   @MaxLength(100, { message: 'Career must not exceed 100 characters' })
   career?: string;
+
+  @ApiPropertyOptional({
+    description: 'IDs de los grupos a los que pertenece el estudiante',
+    type: [String],
+    format: 'uuid',
+  })
+  @IsArray()
+  @IsUUID('4', { each: true })
+  @IsOptional()
+  groupIds?: string[];
 }

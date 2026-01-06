@@ -184,6 +184,7 @@ export class StudentsController {
         dto.email,
         dto.year,
         dto.career,
+        dto.groupIds,
       ),
     );
   }

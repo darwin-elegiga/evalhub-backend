@@ -21,7 +21,8 @@ export class UpdateStudentHandler
   ) {}
 
   async execute(command: UpdateStudentCommand): Promise<StudentResponseDto> {
-    const { studentId, teacherId, fullName, email, year, career } = command;
+    const { studentId, teacherId, fullName, email, year, career, groupIds } =
+      command;
 
     const student = await this.prisma.student.findUnique({
       where: { id: studentId },
@@ -52,22 +53,68 @@ export class UpdateStudentHandler
       }
     }
 
-    const updatedStudent = await this.prisma.student.update({
-      where: { id: studentId },
-      data: {
-        fullName: fullName ?? undefined,
-        email: email ? email.toLowerCase() : undefined,
-        year: year !== undefined ? year : undefined,
-        career: career !== undefined ? career : undefined,
-      },
-      include: {
-        groups: {
-          include: {
-            group: true,
+    // Verify all groups exist and belong to the teacher
+    if (groupIds && groupIds.length > 0) {
+      const groups = await this.prisma.group.findMany({
+        where: {
+          id: { in: groupIds },
+          teacherId,
+        },
+        select: { id: true },
+      });
+
+      if (groups.length !== groupIds.length) {
+        throw new NotFoundException('One or more groups not found');
+      }
+    }
+
+    // Use transaction to update student and group relations
+    const updatedStudent = await this.prisma.$transaction(async (tx) => {
+      // Update student data
+      const updated = await tx.student.update({
+        where: { id: studentId },
+        data: {
+          fullName: fullName ?? undefined,
+          email: email ? email.toLowerCase() : undefined,
+          year: year !== undefined ? year : undefined,
+          career: career !== undefined ? career : undefined,
+        },
+      });
+
+      // Update group relations if groupIds is provided
+      if (groupIds !== undefined) {
+        // Remove all existing group relations
+        await tx.studentGroup.deleteMany({
+          where: { studentId },
+        });
+
+        // Add new group relations
+        if (groupIds.length > 0) {
+          await tx.studentGroup.createMany({
+            data: groupIds.map((groupId) => ({
+              studentId,
+              groupId,
+            })),
+          });
+        }
+      }
+
+      // Fetch updated student with groups
+      return tx.student.findUnique({
+        where: { id: studentId },
+        include: {
+          groups: {
+            include: {
+              group: true,
+            },
           },
         },
-      },
+      });
     });
+
+    if (!updatedStudent) {
+      throw new NotFoundException('Student not found after update');
+    }
 
     this.eventBus.publish(new StudentUpdatedEvent(studentId, teacherId));
 
