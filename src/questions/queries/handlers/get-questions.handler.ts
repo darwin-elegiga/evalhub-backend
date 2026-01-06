@@ -11,11 +11,15 @@ export class GetQuestionsHandler implements IQueryHandler<GetQuestionsQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(query: GetQuestionsQuery): Promise<QuestionResponseDto[]> {
-    const { teacherId, topicId, type, difficulty } = query;
+    const { teacherId, subjectId, topicId, type, difficulty } = query;
 
     const where: Prisma.QuestionWhereInput = {
       teacherId,
     };
+
+    if (subjectId) {
+      where.subjectId = subjectId;
+    }
 
     if (topicId) {
       where.topicId = topicId;

@@ -41,7 +41,7 @@ export class QuestionResponseDto {
 
   @ApiProperty({
     description: 'Tipo de pregunta',
-    enum: ['multiple_choice', 'numeric', 'graph_click', 'image_hotspot', 'open_text'],
+    enum: ['multiple_choice', 'numeric', 'graph_click', 'open_text'],
   })
   questionType: string;
 

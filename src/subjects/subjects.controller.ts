@@ -6,8 +6,6 @@ import {
   Delete,
   Body,
   Param,
-  HttpCode,
-  HttpStatus,
   ParseUUIDPipe,
 } from '@nestjs/common';
 import {
@@ -24,7 +22,12 @@ import {
   DeleteSubjectCommand,
 } from './commands';
 import { GetSubjectsQuery, GetSubjectByIdQuery } from './queries';
-import { CreateSubjectDto, UpdateSubjectDto, SubjectResponseDto } from './dtos';
+import {
+  CreateSubjectDto,
+  UpdateSubjectDto,
+  SubjectResponseDto,
+  DeleteResponseDto,
+} from './dtos';
 import { CurrentUser } from '../auth/decorators';
 import type { JwtUser } from '../auth/interfaces';
 
@@ -128,22 +131,22 @@ export class SubjectsController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Eliminar asignatura',
     description: 'Elimina una asignatura existente',
   })
   @ApiParam({ name: 'id', description: 'ID de la asignatura', format: 'uuid' })
   @ApiResponse({
-    status: 204,
+    status: 200,
     description: 'Asignatura eliminada exitosamente',
+    type: DeleteResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Asignatura no encontrada' })
   @ApiResponse({ status: 403, description: 'Sin permisos para eliminar' })
   async deleteSubject(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: JwtUser,
-  ): Promise<void> {
-    await this.commandBus.execute(new DeleteSubjectCommand(id, user.id));
+  ): Promise<DeleteResponseDto> {
+    return this.commandBus.execute(new DeleteSubjectCommand(id, user.id));
   }
 }

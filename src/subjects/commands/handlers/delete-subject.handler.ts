@@ -7,6 +7,7 @@ import {
 import { DeleteSubjectCommand } from '../delete-subject.command';
 import { PrismaService } from '../../../prisma';
 import { SubjectDeletedEvent } from '../../events';
+import { DeleteResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(DeleteSubjectCommand)
@@ -18,7 +19,7 @@ export class DeleteSubjectHandler
     private readonly eventBus: EventBus,
   ) {}
 
-  async execute(command: DeleteSubjectCommand): Promise<void> {
+  async execute(command: DeleteSubjectCommand): Promise<DeleteResponseDto> {
     const { subjectId, teacherId } = command;
 
     const subject = await this.prisma.subject.findUnique({
@@ -42,5 +43,7 @@ export class DeleteSubjectHandler
     this.eventBus.publish(
       new SubjectDeletedEvent(subjectId, teacherId, subject.name),
     );
+
+    return { success: true };
   }
 }

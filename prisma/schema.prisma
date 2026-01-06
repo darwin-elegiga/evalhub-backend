@@ -21,7 +21,9 @@ model User {
   students      Student[]
   groups        Group[]
   subjects      Subject[]
+  topics        Topic[]
   questions     Question[]
+  exams         Exam[]
 
   @@map("users")
 }
@@ -65,8 +67,9 @@ model Student {
   career    String?
   createdAt DateTime @default(now()) @map("created_at")
 
-  teacher User          @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  groups  StudentGroup[]
+  teacher     User             @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  groups      StudentGroup[]
+  assignments ExamAssignment[]
 
   @@unique([teacherId, email])
   @@index([teacherId])
@@ -134,16 +137,21 @@ model Subject {
 }
 
 model Topic {
-  id        String   @id @default(uuid())
-  subjectId String   @map("subject_id")
-  name      String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id          String   @id @default(uuid())
+  teacherId   String   @map("teacher_id")
+  subjectId   String   @map("subject_id")
+  name        String
+  description String?
+  color       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
+  teacher   User       @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   subject   Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   questions Question[]
 
-  @@unique([subjectId, name])
+  @@unique([teacherId, subjectId, name])
+  @@index([teacherId])
   @@index([subjectId])
   @@map("topics")
 }
@@ -179,9 +187,10 @@ model Question {
   createdAt            DateTime     @default(now()) @map("created_at")
   updatedAt            DateTime     @updatedAt @map("updated_at")
 
-  teacher User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  subject Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
-  topic   Topic?   @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  teacher       User           @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject       Subject?       @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  topic         Topic?         @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  examQuestions ExamQuestion[]
 
   @@index([teacherId])
   @@index([subjectId])
@@ -189,4 +198,66 @@ model Question {
   @@index([questionType])
   @@index([difficulty])
   @@map("questions")
+}
+
+// ============================================
+// EXAMS
+// ============================================
+
+model Exam {
+  id              String   @id @default(uuid())
+  teacherId       String   @map("teacher_id")
+  subjectId       String?  @map("subject_id")
+  title           String
+  description     String?
+  durationMinutes Int?     @map("duration_minutes")
+  config          Json     @default("{}")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  teacher   User           @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  questions ExamQuestion[]
+  assignments ExamAssignment[]
+
+  @@index([teacherId])
+  @@index([subjectId])
+  @@map("exams")
+}
+
+model ExamQuestion {
+  id            String   @id @default(uuid())
+  examId        String   @map("exam_id")
+  questionId    String   @map("question_id")
+  questionOrder Int      @map("question_order")
+  weight        Int      @default(1)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  exam     Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([examId, questionId])
+  @@unique([examId, questionOrder])
+  @@index([examId])
+  @@index([questionId])
+  @@map("exam_questions")
+}
+
+model ExamAssignment {
+  id         String    @id @default(uuid())
+  examId     String    @map("exam_id")
+  studentId  String    @map("student_id")
+  magicToken String    @unique @map("magic_token")
+  assignedAt DateTime  @default(now()) @map("assigned_at")
+  startedAt  DateTime? @map("started_at")
+  finishedAt DateTime? @map("finished_at")
+  score      Float?
+
+  exam    Exam    @relation(fields: [examId], references: [id], onDelete: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([examId, studentId])
+  @@index([examId])
+  @@index([studentId])
+  @@index([magicToken])
+  @@map("exam_assignments")
 }

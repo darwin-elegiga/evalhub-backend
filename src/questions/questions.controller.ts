@@ -51,6 +51,11 @@ export class QuestionsController {
       'Obtiene todas las preguntas del banco del profesor autenticado',
   })
   @ApiQuery({
+    name: 'subjectId',
+    required: false,
+    description: 'Filtrar por asignatura',
+  })
+  @ApiQuery({
     name: 'topicId',
     required: false,
     description: 'Filtrar por tema',
@@ -58,7 +63,7 @@ export class QuestionsController {
   @ApiQuery({
     name: 'type',
     required: false,
-    enum: ['multiple_choice', 'numeric', 'graph_click', 'image_hotspot', 'open_text'],
+    enum: ['multiple_choice', 'numeric', 'graph_click', 'open_text'],
     description: 'Filtrar por tipo',
   })
   @ApiQuery({
@@ -79,6 +84,7 @@ export class QuestionsController {
     return this.queryBus.execute(
       new GetQuestionsQuery(
         user.id,
+        filter.subjectId,
         filter.topicId,
         filter.type,
         filter.difficulty,

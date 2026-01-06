@@ -4,6 +4,14 @@ import { QuestionTypeEnum, DifficultyEnum } from './create-question.dto';
 
 export class GetQuestionsFilterDto {
   @ApiPropertyOptional({
+    description: 'Filtrar por ID de la asignatura',
+    format: 'uuid',
+  })
+  @IsString()
+  @IsOptional()
+  subjectId?: string;
+
+  @ApiPropertyOptional({
     description: 'Filtrar por ID del tema',
     format: 'uuid',
   })
