@@ -21,6 +21,7 @@ model User {
   students      Student[]
   groups        Group[]
   subjects      Subject[]
+  questions     Question[]
 
   @@map("users")
 }
@@ -123,9 +124,69 @@ model Subject {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  teacher User @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  teacher   User       @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  topics    Topic[]
+  questions Question[]
 
   @@unique([teacherId, name])
   @@index([teacherId])
   @@map("subjects")
+}
+
+model Topic {
+  id        String   @id @default(uuid())
+  subjectId String   @map("subject_id")
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  subject   Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  questions Question[]
+
+  @@unique([subjectId, name])
+  @@index([subjectId])
+  @@map("topics")
+}
+
+enum QuestionType {
+  multiple_choice
+  numeric
+  graph_click
+  open_text
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
+
+model Question {
+  id                   String       @id @default(uuid())
+  teacherId            String       @map("teacher_id")
+  subjectId            String?      @map("subject_id")
+  topicId              String?      @map("topic_id")
+  title                String
+  content              String
+  questionType         QuestionType @map("question_type")
+  typeConfig           Json         @map("type_config")
+  difficulty           Difficulty   @default(medium)
+  estimatedTimeMinutes Int?         @map("estimated_time_minutes")
+  tags                 String[]     @default([])
+  weight               Int          @default(1)
+  timesUsed            Int          @default(0) @map("times_used")
+  averageScore         Float?       @map("average_score")
+  createdAt            DateTime     @default(now()) @map("created_at")
+  updatedAt            DateTime     @updatedAt @map("updated_at")
+
+  teacher User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  topic   Topic?   @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  @@index([teacherId])
+  @@index([subjectId])
+  @@index([topicId])
+  @@index([questionType])
+  @@index([difficulty])
+  @@map("questions")
 }

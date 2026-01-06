@@ -9,6 +9,7 @@ import { CareersModule } from './careers';
 import { SubjectsModule } from './subjects';
 import { StudentsModule } from './students';
 import { GroupsModule } from './groups';
+import { QuestionsModule } from './questions';
 import { jwtConfig } from './config';
 
 @Module({
@@ -24,6 +25,7 @@ import { jwtConfig } from './config';
     SubjectsModule,
     StudentsModule,
     GroupsModule,
+    QuestionsModule,
   ],
   controllers: [AppController],
   providers: [
