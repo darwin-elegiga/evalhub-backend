@@ -18,6 +18,8 @@ model User {
 
   refreshTokens RefreshToken[]
   authEvents    AuthEvent[]
+  students      Student[]
+  groups        Group[]
 
   @@map("users")
 }
@@ -50,4 +52,63 @@ model AuthEvent {
   @@index([userId])
   @@index([eventType])
   @@map("auth_events")
+}
+
+model Student {
+  id        String   @id @default(uuid())
+  teacherId String   @map("teacher_id")
+  fullName  String   @map("full_name")
+  email     String
+  year      String?
+  career    String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  teacher User          @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  groups  StudentGroup[]
+
+  @@unique([teacherId, email])
+  @@index([teacherId])
+  @@map("students")
+}
+
+model Group {
+  id        String   @id @default(uuid())
+  teacherId String   @map("teacher_id")
+  name      String
+  year      String
+  career    String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  teacher  User          @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  students StudentGroup[]
+
+  @@unique([teacherId, name, year])
+  @@index([teacherId])
+  @@map("groups")
+}
+
+model StudentGroup {
+  id        String   @id @default(uuid())
+  studentId String   @map("student_id")
+  groupId   String   @map("group_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  group   Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, groupId])
+  @@index([studentId])
+  @@index([groupId])
+  @@map("student_groups")
+}
+
+model Career {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String?  @unique
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("careers")
 }
