@@ -54,14 +54,14 @@ export class SaveAnswerHandler implements ICommandHandler<SaveAnswerCommand> {
         answerText: answerText ?? null,
         answerLatex: answerLatex ?? null,
         answerNumeric: answerNumeric ?? null,
-        answerPoint: answerPoint as Prisma.InputJsonValue ?? null,
+        answerPoint: (answerPoint as Prisma.InputJsonValue) ?? null,
       },
       update: {
         selectedOptionId: selectedOptionId ?? null,
         answerText: answerText ?? null,
         answerLatex: answerLatex ?? null,
         answerNumeric: answerNumeric ?? null,
-        answerPoint: answerPoint as Prisma.InputJsonValue ?? null,
+        answerPoint: (answerPoint as Prisma.InputJsonValue) ?? null,
       },
     });
 

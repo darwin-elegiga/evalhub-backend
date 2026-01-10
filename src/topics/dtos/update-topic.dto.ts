@@ -1,7 +1,18 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, IsUUID, MaxLength, IsIn } from 'class-validator';
 
-const VALID_COLORS = ['blue', 'green', 'red', 'purple', 'orange', 'pink', 'cyan', 'yellow', 'indigo', 'teal'] as const;
+const VALID_COLORS = [
+  'blue',
+  'green',
+  'red',
+  'purple',
+  'orange',
+  'pink',
+  'cyan',
+  'yellow',
+  'indigo',
+  'teal',
+] as const;
 
 export class UpdateTopicDto {
   @ApiPropertyOptional({
@@ -31,7 +42,10 @@ export class UpdateTopicDto {
   })
   @IsString()
   @IsOptional()
-  @IsIn(VALID_COLORS, { message: 'Color must be one of: blue, green, red, purple, orange, pink, cyan, yellow, indigo, teal' })
+  @IsIn(VALID_COLORS, {
+    message:
+      'Color must be one of: blue, green, red, purple, orange, pink, cyan, yellow, indigo, teal',
+  })
   color?: string;
 
   @ApiPropertyOptional({

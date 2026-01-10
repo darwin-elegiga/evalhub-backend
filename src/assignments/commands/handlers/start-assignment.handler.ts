@@ -10,9 +10,7 @@ import { StartAssignmentResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(StartAssignmentCommand)
-export class StartAssignmentHandler
-  implements ICommandHandler<StartAssignmentCommand>
-{
+export class StartAssignmentHandler implements ICommandHandler<StartAssignmentCommand> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(

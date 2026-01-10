@@ -1,5 +1,9 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { GetTopicByIdQuery } from '../get-topic-by-id.query';
 import { PrismaService } from '../../../prisma';
 import { TopicResponseDto } from '../../dtos';

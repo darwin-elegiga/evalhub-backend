@@ -148,7 +148,8 @@ export class GroupsController {
   @Get(':id/students')
   @ApiOperation({
     summary: 'Obtener estudiantes del grupo',
-    description: 'Obtiene todos los estudiantes de un grupo con información completa',
+    description:
+      'Obtiene todos los estudiantes de un grupo con información completa',
   })
   @ApiParam({ name: 'id', description: 'ID del grupo', format: 'uuid' })
   @ApiResponse({

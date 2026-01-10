@@ -14,6 +14,7 @@ import { ExamsModule } from './exams';
 import { TopicsModule } from './topics';
 import { ConfigEndpointsModule } from './config-endpoints';
 import { AssignmentsModule } from './assignments';
+import { GradesModule } from './grades';
 import { jwtConfig } from './config';
 
 @Module({
@@ -34,6 +35,7 @@ import { jwtConfig } from './config';
     TopicsModule,
     ConfigEndpointsModule,
     AssignmentsModule,
+    GradesModule,
   ],
   controllers: [AppController],
   providers: [

@@ -7,9 +7,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 @QueryHandler(GetAssignmentsQuery)
-export class GetAssignmentsHandler
-  implements IQueryHandler<GetAssignmentsQuery>
-{
+export class GetAssignmentsHandler implements IQueryHandler<GetAssignmentsQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(query: GetAssignmentsQuery): Promise<AssignmentResponseDto[]> {

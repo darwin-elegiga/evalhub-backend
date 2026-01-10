@@ -10,9 +10,7 @@ import { QuestionDeletedEvent } from '../../events';
 
 @Injectable()
 @CommandHandler(DeleteQuestionCommand)
-export class DeleteQuestionHandler
-  implements ICommandHandler<DeleteQuestionCommand>
-{
+export class DeleteQuestionHandler implements ICommandHandler<DeleteQuestionCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

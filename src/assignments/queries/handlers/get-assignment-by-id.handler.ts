@@ -1,14 +1,16 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { GetAssignmentByIdQuery } from '../get-assignment-by-id.query';
 import { PrismaService } from '../../../prisma';
 import { AssignmentDetailResponseDto } from '../../dtos';
 
 @Injectable()
 @QueryHandler(GetAssignmentByIdQuery)
-export class GetAssignmentByIdHandler
-  implements IQueryHandler<GetAssignmentByIdQuery>
-{
+export class GetAssignmentByIdHandler implements IQueryHandler<GetAssignmentByIdQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(

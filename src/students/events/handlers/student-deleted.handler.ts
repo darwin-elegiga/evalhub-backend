@@ -3,9 +3,7 @@ import { Logger } from '@nestjs/common';
 import { StudentDeletedEvent } from '../student-deleted.event';
 
 @EventsHandler(StudentDeletedEvent)
-export class StudentDeletedHandler
-  implements IEventHandler<StudentDeletedEvent>
-{
+export class StudentDeletedHandler implements IEventHandler<StudentDeletedEvent> {
   private readonly logger = new Logger(StudentDeletedHandler.name);
 
   async handle(event: StudentDeletedEvent): Promise<void> {

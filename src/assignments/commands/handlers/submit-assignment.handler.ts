@@ -18,9 +18,7 @@ interface MultipleChoiceConfig {
 
 @Injectable()
 @CommandHandler(SubmitAssignmentCommand)
-export class SubmitAssignmentHandler
-  implements ICommandHandler<SubmitAssignmentCommand>
-{
+export class SubmitAssignmentHandler implements ICommandHandler<SubmitAssignmentCommand> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(

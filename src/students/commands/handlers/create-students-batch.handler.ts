@@ -7,9 +7,7 @@ import { BatchResultDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(CreateStudentsBatchCommand)
-export class CreateStudentsBatchHandler
-  implements ICommandHandler<CreateStudentsBatchCommand>
-{
+export class CreateStudentsBatchHandler implements ICommandHandler<CreateStudentsBatchCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,
@@ -110,7 +108,9 @@ export class CreateStudentsBatchHandler
             groups:
               studentData.groupIds && studentData.groupIds.length > 0
                 ? {
-                    create: studentData.groupIds.map((groupId) => ({ groupId })),
+                    create: studentData.groupIds.map((groupId) => ({
+                      groupId,
+                    })),
                   }
                 : undefined,
           },

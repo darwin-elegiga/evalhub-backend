@@ -1,14 +1,16 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { GetAssignmentGradingQuery } from '../get-assignment-grading.query';
 import { PrismaService } from '../../../prisma';
 import { GradingResponseDto } from '../../dtos';
 
 @Injectable()
 @QueryHandler(GetAssignmentGradingQuery)
-export class GetAssignmentGradingHandler
-  implements IQueryHandler<GetAssignmentGradingQuery>
-{
+export class GetAssignmentGradingHandler implements IQueryHandler<GetAssignmentGradingQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(query: GetAssignmentGradingQuery): Promise<GradingResponseDto> {
@@ -61,7 +63,9 @@ export class GetAssignmentGradingHandler
     // Build questions with answers
     const questions = assignment.exam.questions.map((eq) => {
       const question = eq.question;
-      const answer = assignment.answers.find((a) => a.questionId === question.id);
+      const answer = assignment.answers.find(
+        (a) => a.questionId === question.id,
+      );
 
       return {
         id: question.id,

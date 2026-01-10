@@ -12,9 +12,7 @@ import { QuestionType, Difficulty, Prisma } from '@prisma/client';
 
 @Injectable()
 @CommandHandler(UpdateQuestionCommand)
-export class UpdateQuestionHandler
-  implements ICommandHandler<UpdateQuestionCommand>
-{
+export class UpdateQuestionHandler implements ICommandHandler<UpdateQuestionCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,
@@ -73,9 +71,7 @@ export class UpdateQuestionHandler
       data: {
         title: title ?? undefined,
         content: content ?? undefined,
-        questionType: questionType
-          ? (questionType as QuestionType)
-          : undefined,
+        questionType: questionType ? (questionType as QuestionType) : undefined,
         typeConfig: typeConfig
           ? (typeConfig as Prisma.InputJsonValue)
           : undefined,

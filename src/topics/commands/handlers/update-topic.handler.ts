@@ -67,7 +67,9 @@ export class UpdateTopicHandler implements ICommandHandler<UpdateTopicCommand> {
       });
 
       if (existingTopic && existingTopic.id !== topicId) {
-        throw new ConflictException('Topic with this name already exists in the subject');
+        throw new ConflictException(
+          'Topic with this name already exists in the subject',
+        );
       }
     }
 

@@ -14,7 +14,10 @@ export class AppController {
   }
 
   @Get('protected')
-  getProtected(@CurrentUser() user: JwtUser): { message: string; user: JwtUser } {
+  getProtected(@CurrentUser() user: JwtUser): {
+    message: string;
+    user: JwtUser;
+  } {
     return {
       message: 'This is a protected route',
       user,

@@ -10,9 +10,7 @@ import { StudentResponseDto } from '../../dtos';
 
 @Injectable()
 @QueryHandler(GetStudentByIdQuery)
-export class GetStudentByIdHandler
-  implements IQueryHandler<GetStudentByIdQuery>
-{
+export class GetStudentByIdHandler implements IQueryHandler<GetStudentByIdQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(query: GetStudentByIdQuery): Promise<StudentResponseDto> {

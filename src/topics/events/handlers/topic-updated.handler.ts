@@ -8,8 +8,6 @@ export class TopicUpdatedHandler implements IEventHandler<TopicUpdatedEvent> {
   private readonly logger = new Logger(TopicUpdatedHandler.name);
 
   handle(event: TopicUpdatedEvent): void {
-    this.logger.log(
-      `Topic updated: ${event.name} (ID: ${event.topicId})`,
-    );
+    this.logger.log(`Topic updated: ${event.name} (ID: ${event.topicId})`);
   }
 }

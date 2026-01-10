@@ -45,7 +45,8 @@ export class TopicsController {
   @Get()
   @ApiOperation({
     summary: 'Listar temas',
-    description: 'Obtiene todos los temas del profesor autenticado. Puede filtrar por asignatura.',
+    description:
+      'Obtiene todos los temas del profesor autenticado. Puede filtrar por asignatura.',
   })
   @ApiQuery({
     name: 'subjectId',
@@ -100,7 +101,10 @@ export class TopicsController {
   })
   @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
   @ApiResponse({ status: 404, description: 'Asignatura no encontrada' })
-  @ApiResponse({ status: 409, description: 'El tema ya existe en esta asignatura' })
+  @ApiResponse({
+    status: 409,
+    description: 'El tema ya existe en esta asignatura',
+  })
   async createTopic(
     @Body() dto: CreateTopicDto,
     @CurrentUser() user: JwtUser,
@@ -129,7 +133,10 @@ export class TopicsController {
   })
   @ApiResponse({ status: 404, description: 'Tema no encontrado' })
   @ApiResponse({ status: 403, description: 'Sin permisos para actualizar' })
-  @ApiResponse({ status: 409, description: 'El nombre ya existe en la asignatura' })
+  @ApiResponse({
+    status: 409,
+    description: 'El nombre ya existe en la asignatura',
+  })
   async updateTopic(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateTopicDto,

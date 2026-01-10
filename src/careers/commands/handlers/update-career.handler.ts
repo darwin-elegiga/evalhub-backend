@@ -11,9 +11,7 @@ import { CareerResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(UpdateCareerCommand)
-export class UpdateCareerHandler
-  implements ICommandHandler<UpdateCareerCommand>
-{
+export class UpdateCareerHandler implements ICommandHandler<UpdateCareerCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

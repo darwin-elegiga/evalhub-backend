@@ -12,9 +12,7 @@ import { SubjectResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(UpdateSubjectCommand)
-export class UpdateSubjectHandler
-  implements ICommandHandler<UpdateSubjectCommand>
-{
+export class UpdateSubjectHandler implements ICommandHandler<UpdateSubjectCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

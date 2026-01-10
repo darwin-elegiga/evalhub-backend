@@ -225,7 +225,10 @@ export class StudentsController {
     description: 'Elimina un estudiante existente',
   })
   @ApiParam({ name: 'id', description: 'ID del estudiante', format: 'uuid' })
-  @ApiResponse({ status: 204, description: 'Estudiante eliminado exitosamente' })
+  @ApiResponse({
+    status: 204,
+    description: 'Estudiante eliminado exitosamente',
+  })
   @ApiResponse({ status: 404, description: 'Estudiante no encontrado' })
   @ApiResponse({ status: 403, description: 'Sin permisos para eliminar' })
   async deleteStudent(
@@ -264,7 +267,9 @@ export class StudentsController {
     }
 
     if (emailIndex === -1) {
-      throw new BadRequestException('CSV must have an "email" or "correo" column');
+      throw new BadRequestException(
+        'CSV must have an "email" or "correo" column',
+      );
     }
 
     // Find optional columns
@@ -295,9 +300,12 @@ export class StudentsController {
       const student: StudentItemDto = {
         fullName,
         email,
-        year: yearIndex !== -1 ? values[yearIndex]?.trim() || undefined : undefined,
+        year:
+          yearIndex !== -1 ? values[yearIndex]?.trim() || undefined : undefined,
         career:
-          careerIndex !== -1 ? values[careerIndex]?.trim() || undefined : undefined,
+          careerIndex !== -1
+            ? values[careerIndex]?.trim() || undefined
+            : undefined,
         groupIds,
       };
 

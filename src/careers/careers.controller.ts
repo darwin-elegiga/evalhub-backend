@@ -91,12 +91,8 @@ export class CareersController {
   })
   @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
   @ApiResponse({ status: 409, description: 'La carrera ya existe' })
-  async createCareer(
-    @Body() dto: CreateCareerDto,
-  ): Promise<CareerResponseDto> {
-    return this.commandBus.execute(
-      new CreateCareerCommand(dto.name, dto.code),
-    );
+  async createCareer(@Body() dto: CreateCareerDto): Promise<CareerResponseDto> {
+    return this.commandBus.execute(new CreateCareerCommand(dto.name, dto.code));
   }
 
   @Put(':id')
@@ -130,9 +126,7 @@ export class CareersController {
   @ApiParam({ name: 'id', description: 'ID de la carrera', format: 'uuid' })
   @ApiResponse({ status: 204, description: 'Carrera eliminada exitosamente' })
   @ApiResponse({ status: 404, description: 'Carrera no encontrada' })
-  async deleteCareer(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<void> {
+  async deleteCareer(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     await this.commandBus.execute(new DeleteCareerCommand(id));
   }
 }

@@ -11,9 +11,7 @@ import { DeleteResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(DeleteSubjectCommand)
-export class DeleteSubjectHandler
-  implements ICommandHandler<DeleteSubjectCommand>
-{
+export class DeleteSubjectHandler implements ICommandHandler<DeleteSubjectCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

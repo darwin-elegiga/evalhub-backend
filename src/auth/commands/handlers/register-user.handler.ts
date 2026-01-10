@@ -47,7 +47,12 @@ export class RegisterUserHandler implements ICommandHandler<RegisterUserCommand>
     await this.saveRefreshToken(user.id, tokens.refreshToken);
 
     this.eventBus.publish(
-      new UserRegisteredEvent(user.id, user.email, user.firstName, user.lastName),
+      new UserRegisteredEvent(
+        user.id,
+        user.email,
+        user.firstName,
+        user.lastName,
+      ),
     );
 
     return {

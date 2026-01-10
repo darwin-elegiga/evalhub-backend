@@ -8,8 +8,6 @@ export class TopicDeletedHandler implements IEventHandler<TopicDeletedEvent> {
   private readonly logger = new Logger(TopicDeletedHandler.name);
 
   handle(event: TopicDeletedEvent): void {
-    this.logger.log(
-      `Topic deleted: ${event.name} (ID: ${event.topicId})`,
-    );
+    this.logger.log(`Topic deleted: ${event.name} (ID: ${event.topicId})`);
   }
 }

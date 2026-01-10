@@ -72,7 +72,10 @@ export class ExamsController {
     type: ExamDetailResponseDto,
   })
   @ApiResponse({ status: 404, description: 'Examen no encontrado' })
-  @ApiResponse({ status: 403, description: 'Sin permisos para ver este examen' })
+  @ApiResponse({
+    status: 403,
+    description: 'Sin permisos para ver este examen',
+  })
   async getExamById(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: JwtUser,
@@ -91,7 +94,10 @@ export class ExamsController {
     type: CreateExamResponseDto,
   })
   @ApiResponse({ status: 400, description: 'Datos de entrada inválidos' })
-  @ApiResponse({ status: 404, description: 'Pregunta o asignatura no encontrada' })
+  @ApiResponse({
+    status: 404,
+    description: 'Pregunta o asignatura no encontrada',
+  })
   async createExam(
     @Body() dto: CreateExamDto,
     @CurrentUser() user: JwtUser,
@@ -169,10 +175,19 @@ export class ExamsController {
     description: 'Examen asignado exitosamente',
     type: AssignExamResponseDto,
   })
-  @ApiResponse({ status: 400, description: 'Debe proporcionar studentIds o groupId' })
-  @ApiResponse({ status: 404, description: 'Examen, estudiantes o grupo no encontrados' })
+  @ApiResponse({
+    status: 400,
+    description: 'Debe proporcionar studentIds o groupId',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Examen, estudiantes o grupo no encontrados',
+  })
   @ApiResponse({ status: 403, description: 'Sin permisos para asignar' })
-  @ApiResponse({ status: 409, description: 'Todos los estudiantes ya tienen asignado el examen' })
+  @ApiResponse({
+    status: 409,
+    description: 'Todos los estudiantes ya tienen asignado el examen',
+  })
   async assignExam(
     @Body() dto: AssignExamDto,
     @CurrentUser() user: JwtUser,

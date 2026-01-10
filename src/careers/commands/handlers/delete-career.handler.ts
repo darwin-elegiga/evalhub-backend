@@ -6,9 +6,7 @@ import { CareerDeletedEvent } from '../../events';
 
 @Injectable()
 @CommandHandler(DeleteCareerCommand)
-export class DeleteCareerHandler
-  implements ICommandHandler<DeleteCareerCommand>
-{
+export class DeleteCareerHandler implements ICommandHandler<DeleteCareerCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

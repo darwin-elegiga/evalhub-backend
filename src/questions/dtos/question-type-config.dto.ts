@@ -13,7 +13,10 @@ import { Type } from 'class-transformer';
 // MULTIPLE CHOICE
 // ============================================
 export class MultipleChoiceOptionDto {
-  @ApiProperty({ description: 'ID de la opción (UUID)', example: 'a3ea8d98-0f39-4cdc-97eb-699b88283036' })
+  @ApiProperty({
+    description: 'ID de la opción (UUID)',
+    example: 'a3ea8d98-0f39-4cdc-97eb-699b88283036',
+  })
   @IsString()
   id: string;
 
@@ -136,7 +139,10 @@ export class LineDto {
 }
 
 export class FunctionDto {
-  @ApiProperty({ description: 'ID de la función', example: 'func-1704567890123' })
+  @ApiProperty({
+    description: 'ID de la función',
+    example: 'func-1704567890123',
+  })
   @IsString()
   id: string;
 
@@ -148,7 +154,10 @@ export class FunctionDto {
   @IsString()
   color: string;
 
-  @ApiPropertyOptional({ description: 'Etiqueta de la función', example: 'y = x²' })
+  @ApiPropertyOptional({
+    description: 'Etiqueta de la función',
+    example: 'y = x²',
+  })
   @IsString()
   @IsOptional()
   label?: string;

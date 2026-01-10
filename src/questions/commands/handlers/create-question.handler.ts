@@ -8,9 +8,7 @@ import { QuestionType, Difficulty, Prisma } from '@prisma/client';
 
 @Injectable()
 @CommandHandler(CreateQuestionCommand)
-export class CreateQuestionHandler
-  implements ICommandHandler<CreateQuestionCommand>
-{
+export class CreateQuestionHandler implements ICommandHandler<CreateQuestionCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

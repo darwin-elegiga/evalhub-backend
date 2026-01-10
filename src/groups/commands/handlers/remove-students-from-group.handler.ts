@@ -10,9 +10,7 @@ import { GroupResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(RemoveStudentsFromGroupCommand)
-export class RemoveStudentsFromGroupHandler
-  implements ICommandHandler<RemoveStudentsFromGroupCommand>
-{
+export class RemoveStudentsFromGroupHandler implements ICommandHandler<RemoveStudentsFromGroupCommand> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(

@@ -1,5 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { ExamDefaultConfigDto } from '../exams/dtos';
 import { PrismaService } from '../prisma';
 import { CurrentUser } from '../auth/decorators';
@@ -31,7 +36,9 @@ export class ConfigController {
     description: 'Configuración por defecto',
     type: ExamDefaultConfigDto,
   })
-  async getExamDefaults(@CurrentUser() user: JwtUser): Promise<ExamDefaultConfigDto> {
+  async getExamDefaults(
+    @CurrentUser() user: JwtUser,
+  ): Promise<ExamDefaultConfigDto> {
     const lastExam = await this.prisma.exam.findFirst({
       where: { teacherId: user.id },
       orderBy: { updatedAt: 'desc' },
@@ -45,24 +52,30 @@ export class ConfigController {
     const config = lastExam.config as Record<string, unknown>;
 
     return {
-      shuffleQuestions: typeof config.shuffleQuestions === 'boolean'
-        ? config.shuffleQuestions
-        : DEFAULT_EXAM_CONFIG.shuffleQuestions,
-      shuffleOptions: typeof config.shuffleOptions === 'boolean'
-        ? config.shuffleOptions
-        : DEFAULT_EXAM_CONFIG.shuffleOptions,
-      showResultsImmediately: typeof config.showResultsImmediately === 'boolean'
-        ? config.showResultsImmediately
-        : DEFAULT_EXAM_CONFIG.showResultsImmediately,
-      penaltyEnabled: typeof config.penaltyEnabled === 'boolean'
-        ? config.penaltyEnabled
-        : DEFAULT_EXAM_CONFIG.penaltyEnabled,
-      penaltyValue: typeof config.penaltyValue === 'number'
-        ? config.penaltyValue
-        : DEFAULT_EXAM_CONFIG.penaltyValue,
-      passingPercentage: typeof config.passingPercentage === 'number'
-        ? config.passingPercentage
-        : DEFAULT_EXAM_CONFIG.passingPercentage,
+      shuffleQuestions:
+        typeof config.shuffleQuestions === 'boolean'
+          ? config.shuffleQuestions
+          : DEFAULT_EXAM_CONFIG.shuffleQuestions,
+      shuffleOptions:
+        typeof config.shuffleOptions === 'boolean'
+          ? config.shuffleOptions
+          : DEFAULT_EXAM_CONFIG.shuffleOptions,
+      showResultsImmediately:
+        typeof config.showResultsImmediately === 'boolean'
+          ? config.showResultsImmediately
+          : DEFAULT_EXAM_CONFIG.showResultsImmediately,
+      penaltyEnabled:
+        typeof config.penaltyEnabled === 'boolean'
+          ? config.penaltyEnabled
+          : DEFAULT_EXAM_CONFIG.penaltyEnabled,
+      penaltyValue:
+        typeof config.penaltyValue === 'number'
+          ? config.penaltyValue
+          : DEFAULT_EXAM_CONFIG.penaltyValue,
+      passingPercentage:
+        typeof config.passingPercentage === 'number'
+          ? config.passingPercentage
+          : DEFAULT_EXAM_CONFIG.passingPercentage,
     };
   }
 }

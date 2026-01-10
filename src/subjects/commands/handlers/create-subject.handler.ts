@@ -7,9 +7,7 @@ import { SubjectResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(CreateSubjectCommand)
-export class CreateSubjectHandler
-  implements ICommandHandler<CreateSubjectCommand>
-{
+export class CreateSubjectHandler implements ICommandHandler<CreateSubjectCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

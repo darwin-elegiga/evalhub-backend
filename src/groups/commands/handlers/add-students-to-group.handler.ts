@@ -11,9 +11,7 @@ import { GroupResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(AddStudentsToGroupCommand)
-export class AddStudentsToGroupHandler
-  implements ICommandHandler<AddStudentsToGroupCommand>
-{
+export class AddStudentsToGroupHandler implements ICommandHandler<AddStudentsToGroupCommand> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(command: AddStudentsToGroupCommand): Promise<GroupResponseDto> {
@@ -56,7 +54,9 @@ export class AddStudentsToGroupHandler
     const existingStudentIds = new Set(
       existingAssociations.map((a) => a.studentId),
     );
-    const newStudentIds = studentIds.filter((id) => !existingStudentIds.has(id));
+    const newStudentIds = studentIds.filter(
+      (id) => !existingStudentIds.has(id),
+    );
 
     if (newStudentIds.length > 0) {
       await this.prisma.studentGroup.createMany({

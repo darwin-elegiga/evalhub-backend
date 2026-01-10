@@ -10,9 +10,7 @@ import { StudentDeletedEvent } from '../../events';
 
 @Injectable()
 @CommandHandler(DeleteStudentCommand)
-export class DeleteStudentHandler
-  implements ICommandHandler<DeleteStudentCommand>
-{
+export class DeleteStudentHandler implements ICommandHandler<DeleteStudentCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

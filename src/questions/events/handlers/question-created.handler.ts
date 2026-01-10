@@ -3,9 +3,7 @@ import { Logger } from '@nestjs/common';
 import { QuestionCreatedEvent } from '../question-created.event';
 
 @EventsHandler(QuestionCreatedEvent)
-export class QuestionCreatedHandler
-  implements IEventHandler<QuestionCreatedEvent>
-{
+export class QuestionCreatedHandler implements IEventHandler<QuestionCreatedEvent> {
   private readonly logger = new Logger(QuestionCreatedHandler.name);
 
   handle(event: QuestionCreatedEvent): void {

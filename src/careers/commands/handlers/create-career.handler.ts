@@ -7,9 +7,7 @@ import { CareerResponseDto } from '../../dtos';
 
 @Injectable()
 @CommandHandler(CreateCareerCommand)
-export class CreateCareerHandler
-  implements ICommandHandler<CreateCareerCommand>
-{
+export class CreateCareerHandler implements ICommandHandler<CreateCareerCommand> {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventBus: EventBus,

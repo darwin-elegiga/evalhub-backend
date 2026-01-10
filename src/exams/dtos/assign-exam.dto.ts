@@ -29,7 +29,8 @@ export class AssignExamDto {
   studentIds?: string[];
 
   @ApiPropertyOptional({
-    description: 'ID del grupo al que asignar el examen (todos los estudiantes del grupo)',
+    description:
+      'ID del grupo al que asignar el examen (todos los estudiantes del grupo)',
     format: 'uuid',
   })
   @ValidateIf((o) => !o.studentIds || o.studentIds.length === 0)

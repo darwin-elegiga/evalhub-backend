@@ -44,7 +44,9 @@ export class QuestionDetailDto {
   @ApiProperty()
   content: string;
 
-  @ApiProperty({ enum: ['multiple_choice', 'numeric', 'graph_click', 'open_text'] })
+  @ApiProperty({
+    enum: ['multiple_choice', 'numeric', 'graph_click', 'open_text'],
+  })
   questionType: string;
 
   @ApiProperty()

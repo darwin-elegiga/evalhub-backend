@@ -6,9 +6,7 @@ import { TokenResponseDto } from '../../dtos';
 
 @Injectable()
 @QueryHandler(GetAssignmentByTokenQuery)
-export class GetAssignmentByTokenHandler
-  implements IQueryHandler<GetAssignmentByTokenQuery>
-{
+export class GetAssignmentByTokenHandler implements IQueryHandler<GetAssignmentByTokenQuery> {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(query: GetAssignmentByTokenQuery): Promise<TokenResponseDto> {
