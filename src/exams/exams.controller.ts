@@ -161,22 +161,24 @@ export class ExamsController {
   @Post('assign')
   @ApiOperation({
     summary: 'Asignar examen a estudiantes',
-    description: 'Asigna un examen a una lista de estudiantes generando tokens únicos',
+    description:
+      'Asigna un examen a estudiantes individuales o a un grupo completo, generando tokens únicos',
   })
   @ApiResponse({
     status: 201,
     description: 'Examen asignado exitosamente',
     type: AssignExamResponseDto,
   })
-  @ApiResponse({ status: 404, description: 'Examen o estudiantes no encontrados' })
+  @ApiResponse({ status: 400, description: 'Debe proporcionar studentIds o groupId' })
+  @ApiResponse({ status: 404, description: 'Examen, estudiantes o grupo no encontrados' })
   @ApiResponse({ status: 403, description: 'Sin permisos para asignar' })
-  @ApiResponse({ status: 409, description: 'Estudiantes ya tienen asignado el examen' })
+  @ApiResponse({ status: 409, description: 'Todos los estudiantes ya tienen asignado el examen' })
   async assignExam(
     @Body() dto: AssignExamDto,
     @CurrentUser() user: JwtUser,
   ): Promise<AssignExamResponseDto> {
     return this.commandBus.execute(
-      new AssignExamCommand(user.id, dto.examId, dto.studentIds),
+      new AssignExamCommand(user.id, dto.examId, dto.studentIds, dto.groupId),
     );
   }
 }

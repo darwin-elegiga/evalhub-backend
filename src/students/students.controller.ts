@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   HttpCode,
   HttpStatus,
   ParseUUIDPipe,
@@ -17,6 +18,7 @@ import {
   ApiResponse,
   ApiBearerAuth,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -50,7 +52,28 @@ export class StudentsController {
   @Get()
   @ApiOperation({
     summary: 'Listar estudiantes',
-    description: 'Obtiene todos los estudiantes del profesor autenticado',
+    description:
+      'Obtiene todos los estudiantes del profesor autenticado con filtros opcionales',
+  })
+  @ApiQuery({
+    name: 'groupId',
+    required: false,
+    description: 'Filtrar por ID de grupo',
+  })
+  @ApiQuery({
+    name: 'career',
+    required: false,
+    description: 'Filtrar por carrera (búsqueda parcial)',
+  })
+  @ApiQuery({
+    name: 'year',
+    required: false,
+    description: 'Filtrar por año',
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Buscar por nombre o email',
   })
   @ApiResponse({
     status: 200,
@@ -59,8 +82,14 @@ export class StudentsController {
   })
   async getStudents(
     @CurrentUser() user: JwtUser,
+    @Query('groupId') groupId?: string,
+    @Query('career') career?: string,
+    @Query('year') year?: string,
+    @Query('search') search?: string,
   ): Promise<StudentResponseDto[]> {
-    return this.queryBus.execute(new GetStudentsQuery(user.id));
+    return this.queryBus.execute(
+      new GetStudentsQuery(user.id, groupId, career, year, search),
+    );
   }
 
   @Get(':id')

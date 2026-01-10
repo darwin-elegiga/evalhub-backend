@@ -25,13 +25,18 @@ import {
   AddStudentsToGroupCommand,
   RemoveStudentsFromGroupCommand,
 } from './commands';
-import { GetGroupsQuery, GetGroupByIdQuery } from './queries';
+import {
+  GetGroupsQuery,
+  GetGroupByIdQuery,
+  GetGroupStudentsQuery,
+} from './queries';
 import {
   CreateGroupDto,
   UpdateGroupDto,
   GroupResponseDto,
   ManageStudentsDto,
 } from './dtos';
+import { StudentResponseDto } from '../students/dtos';
 import { CurrentUser } from '../auth/decorators';
 import type { JwtUser } from '../auth/interfaces';
 
@@ -138,6 +143,26 @@ export class GroupsController {
     @CurrentUser() user: JwtUser,
   ): Promise<void> {
     await this.commandBus.execute(new DeleteGroupCommand(id, user.id));
+  }
+
+  @Get(':id/students')
+  @ApiOperation({
+    summary: 'Obtener estudiantes del grupo',
+    description: 'Obtiene todos los estudiantes de un grupo con información completa',
+  })
+  @ApiParam({ name: 'id', description: 'ID del grupo', format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de estudiantes del grupo',
+    type: [StudentResponseDto],
+  })
+  @ApiResponse({ status: 404, description: 'Grupo no encontrado' })
+  @ApiResponse({ status: 403, description: 'Sin permisos para ver este grupo' })
+  async getGroupStudents(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: JwtUser,
+  ): Promise<StudentResponseDto[]> {
+    return this.queryBus.execute(new GetGroupStudentsQuery(id, user.id));
   }
 
   @Post(':id/students')

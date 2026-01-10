@@ -4,6 +4,7 @@ import {
   NotFoundException,
   ForbiddenException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { randomBytes } from 'crypto';
@@ -22,7 +23,14 @@ export class AssignExamHandler implements ICommandHandler<AssignExamCommand> {
   ) {}
 
   async execute(command: AssignExamCommand): Promise<AssignExamResponseDto> {
-    const { teacherId, examId, studentIds } = command;
+    const { teacherId, examId, studentIds, groupId } = command;
+
+    // Validate that at least one of studentIds or groupId is provided
+    if ((!studentIds || studentIds.length === 0) && !groupId) {
+      throw new BadRequestException(
+        'Either studentIds or groupId must be provided',
+      );
+    }
 
     // Verify exam exists and belongs to teacher
     const exam = await this.prisma.exam.findUnique({
@@ -39,32 +47,72 @@ export class AssignExamHandler implements ICommandHandler<AssignExamCommand> {
       );
     }
 
-    // Verify all students exist and belong to the teacher
-    const students = await this.prisma.student.findMany({
-      where: {
-        id: { in: studentIds },
-        teacherId,
-      },
-      select: { id: true },
-    });
+    // Resolve student IDs (either from direct list or from group)
+    let resolvedStudentIds: string[] = [];
 
-    if (students.length !== studentIds.length) {
-      throw new NotFoundException('One or more students not found');
+    if (groupId) {
+      // Verify group exists and belongs to teacher
+      const group = await this.prisma.group.findUnique({
+        where: { id: groupId },
+        include: {
+          students: {
+            select: { studentId: true },
+          },
+        },
+      });
+
+      if (!group) {
+        throw new NotFoundException('Group not found');
+      }
+
+      if (group.teacherId !== teacherId) {
+        throw new ForbiddenException(
+          'You do not have permission to use this group',
+        );
+      }
+
+      resolvedStudentIds = group.students.map((s) => s.studentId);
+
+      if (resolvedStudentIds.length === 0) {
+        throw new BadRequestException('Group has no students');
+      }
+    } else if (studentIds && studentIds.length > 0) {
+      // Verify all students exist and belong to the teacher
+      const students = await this.prisma.student.findMany({
+        where: {
+          id: { in: studentIds },
+          teacherId,
+        },
+        select: { id: true },
+      });
+
+      if (students.length !== studentIds.length) {
+        throw new NotFoundException('One or more students not found');
+      }
+
+      resolvedStudentIds = studentIds;
     }
 
     // Check for existing assignments
     const existingAssignments = await this.prisma.examAssignment.findMany({
       where: {
         examId,
-        studentId: { in: studentIds },
+        studentId: { in: resolvedStudentIds },
       },
       select: { studentId: true },
     });
 
-    if (existingAssignments.length > 0) {
-      const existingIds = existingAssignments.map((a) => a.studentId);
+    // Filter out students that already have assignments
+    const existingStudentIds = new Set(
+      existingAssignments.map((a) => a.studentId),
+    );
+    const newStudentIds = resolvedStudentIds.filter(
+      (id) => !existingStudentIds.has(id),
+    );
+
+    if (newStudentIds.length === 0) {
       throw new ConflictException(
-        `Some students are already assigned to this exam: ${existingIds.join(', ')}`,
+        'All students are already assigned to this exam',
       );
     }
 
@@ -73,19 +121,29 @@ export class AssignExamHandler implements ICommandHandler<AssignExamCommand> {
       this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
 
     const assignments = await Promise.all(
-      studentIds.map(async (studentId) => {
+      newStudentIds.map(async (studentId) => {
         const magicToken = randomBytes(32).toString('hex');
 
-        await this.prisma.examAssignment.create({
+        const created = await this.prisma.examAssignment.create({
           data: {
             examId,
             studentId,
             magicToken,
           },
+          include: {
+            student: {
+              select: {
+                fullName: true,
+                email: true,
+              },
+            },
+          },
         });
 
         return {
           studentId,
+          studentName: created.student.fullName,
+          studentEmail: created.student.email,
           magicToken,
           magicLink: `${baseUrl}/exam/${magicToken}`,
         };
@@ -93,9 +151,12 @@ export class AssignExamHandler implements ICommandHandler<AssignExamCommand> {
     );
 
     this.eventBus.publish(
-      new ExamAssignedEvent(examId, teacherId, studentIds.length),
+      new ExamAssignedEvent(examId, teacherId, newStudentIds.length),
     );
 
-    return { assignments };
+    return {
+      assignments,
+      skippedCount: existingStudentIds.size,
+    };
   }
 }

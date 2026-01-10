@@ -28,7 +28,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('EvalHub API')
-    .setDescription('API de autenticación y gestión de exámenes')
+    .setDescription('API de autenticación y gestión de exámenes para profesores')
     .setVersion('1.0')
     .addBearerAuth(
       {
@@ -41,7 +41,15 @@ async function bootstrap() {
       },
       'JWT-auth',
     )
-    .addTag('auth', 'Endpoints de autenticación')
+    .addTag('auth', 'Autenticación de profesores')
+    .addTag('careers', 'Gestión de carreras')
+    .addTag('subjects', 'Gestión de asignaturas')
+    .addTag('topics', 'Gestión de temas por asignatura')
+    .addTag('students', 'Gestión de estudiantes')
+    .addTag('groups', 'Gestión de grupos de estudiantes')
+    .addTag('questions', 'Banco de preguntas')
+    .addTag('exams', 'Gestión de exámenes')
+    .addTag('assignments', 'Asignación y ejecución de exámenes')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
